@@ -1,0 +1,12 @@
+- name: Sobre o projeto
+  link: /about/
+  new_window: false
+  highlight: false
+- name: Contactos
+  link: /contact/
+  new_window: false
+  highlight: false
+- name: Documentação
+  link: /doc/
+  new_window: false
+  highlight: false

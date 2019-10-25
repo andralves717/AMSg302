@@ -1,0 +1,29 @@
+- links:
+  - name: Sobre o projeto
+    link: /about/
+  - name: Contactos
+    link: /contact/
+- links:
+  - name: Docs
+    link: /doc/
+    new_window: true
+  - name: Status
+    link: /
+    new_window: true
+- links:
+  - name: Facebook
+    link: https://facebook.com/AMSg302/
+    new_window: true
+    social_icon: Facebook
+  - name: Twitter
+    link: https://twitter.com/AMSg302/
+    social_icon: Twitter
+    new_window: true
+  - name: YouTube
+    link: https://youtube.com/AMSg302/
+    social_icon: YouTube
+    new_window: true
+  - name: RSS
+    link: /feed.xml
+    social_icon: RSS
+    new_window: false
