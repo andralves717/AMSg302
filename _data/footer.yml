@@ -1,0 +1,29 @@
+- links:
+  - name: Sobre o projeto
+    link: /about/
+  - name: Contactos
+    link: /contact/
+- links:
+  - name: Docs
+    link: /doc/
+    new_window: true
+  - name: Protótipo
+    link: https://share.proto.io/UW8WZB/
+    new_window: true
+- links:
+  - name: Facebook
+    link: /404/
+    new_window: true
+    social_icon: Facebook
+  - name: Twitter
+    link: /404/
+    social_icon: Twitter
+    new_window: true
+  - name: YouTube
+    link: /404/
+    social_icon: YouTube
+    new_window: true
+  - name: RSS
+    link: /feed.xml
+    social_icon: RSS
+    new_window: true
