@@ -1,8 +1,14 @@
 import cherrypy
 import os
+import sqlite3
+import json
+import requests
+from sqlite3 import Error
 from jinja2 import Environment, PackageLoader, select_autoescape
 
+
 class WebApp(object):
+    database = 'baseDados.db'
 
     def __init__(self):
         self.env = Environment(
@@ -10,24 +16,124 @@ class WebApp(object):
             autoescape=select_autoescape(['html', 'xml'])
         )
 
+    # Utilities
+    def db_connection(self, dbFile):
+        try:
+            connect = sqlite3.connect(dbFile)
+            return connect
+        except Error as e:
+            print(e)
+        return None
+
     def render(self, tpg, tps):
         template = self.env.get_template(tpg)
         return template.render(tps)
-    @cherrypy.expose
+
+    # User authentication
+    def set_user(self, username=None):
+        if username == None:
+            cherrypy.session['user'] = {'authenticated': False, 'username': ''}
+        else:
+            cherrypy.session['user'] = {'authenticated': True, 'username': username}
+
+    def get_user(self):
+        if not 'user' in cherrypy.session:
+            self.set_user()
+        return cherrypy.session['user']
+
+    def user_authenticationDB(self, username, password):
+        user = self.get_user()
+        db_con = self.db_connection(WebApp.database)
+        command = "select password from utilizadores where username ==('{}') ".format(username)
+        cur = db_con.execute(command)
+        linha = cur.fetchone()
+        if linha != None:
+            if linha[0] == password:
+                self.set_user(username)
+        db_con.close()
+
+    def createUserDB(self, username, password, email):
+        db_con = self.db_connection(WebApp.database)
+        command = "insert into utilizadores (username, password, email) values ('{}','{}','{}')".format(username,
+                                                                                                        password, email)
+        try:
+            cur = db_con.execute(command)
+            db_con.commit()
+            db_con.close()
+        except sqlite3.Error as e:
+            return False
+        return True
+
+    # templates
+    @cherrypy.expose()
     def index(self):
         tparams = {
-            'title': 'Login'
+            'title': 'Home',
+            'user': self.get_user(),
+            'errors': False
         }
-        return self.render('login.html', tparams)
+        return self.render("index.html",tparams)
 
     @cherrypy.expose
-    def signUp(self):
+    def login(self, username=None, password=None):
+        if username is None:
+            tparams = {
+                'title': 'Login',
+                'user': self.get_user(),
+                'errors': False
+            }
+            return self.render('login.html', tparams)
+        else:
+            self.user_authenticationDB(username, password)
+            if not self.get_user()['authenticated']:
+                tparams = {
+                    'title': 'Home',
+                    'user': self.get_user(),
+                    'errors': True,
+                }
+                return self.render('login.html', tparams)
+            else:
+                print("oiiiiiiiiii")
+                raise cherrypy.HTTPRedirect("/signUp")
+
+    @cherrypy.expose
+    def signUp(self, username=None, password=None, email=None):
+        if username is None:
+            tparams = {
+                'title': 'Sign Up',
+                'user': self.get_user(),
+                'errors': False,
+            }
+            return self.render('signUp.html', tparams)
+        else:
+            done = self.createUserDB(username, password, email)
+            if done:
+                cherrypy.HTTPRedirect("/index")
+            tparams = {
+                'title': 'Sign Up',
+                'user': self.get_user(),
+                'errors': True,
+            }
+            return self.render('signUp.html', tparams)
+
+    def myEvents(self):
         tparams = {
-            'title': 'Sign up'
+            'title': 'My Events',
+            'errors': False,
+            'user': self.get_user(),
+            # 'events': events_list
         }
-        return self.render('signUp.html',tparams)
+        return self.render('my_events.html', tparams)
 
 
+def error_page(status, message, traceback, version):
+    tparams = {
+        'status': status,
+        'message': message,
+        'traceback': traceback,
+        'version': version
+    }
+    return app.render('error.html', tparams)
 
 
 if __name__ == '__main__':
@@ -39,15 +145,17 @@ if __name__ == '__main__':
             'tools.sessions.on': True,
             'tools.staticdir.root': baseDir
         },
-        '/utils': {
+        '/static': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': './utils'
+            'tools.staticdir.dir': './static'
         },
     }
 
-
-    cherrypy.config.update({'server.socket_host' : '127.0.0.1'})
-    cherrypy.config.update({'server.socket_port' : 8080})
+    cherrypy.config.update({'error_page.400': error_page})
+    cherrypy.config.update({'error_page.404': error_page})
+    cherrypy.config.update({'error_page.500': error_page})
+    cherrypy.config.update({'server.socket_host': '127.0.0.1'})
+    cherrypy.config.update({'server.socket_port': 8080})
 
     app = WebApp()
-    cherrypy.quickstart(app,'/',conf)
+    cherrypy.quickstart(app, '/', conf)
