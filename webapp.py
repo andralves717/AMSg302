@@ -94,7 +94,7 @@ class WebApp(object):
                 return self.render('login.html', tparams)
             else:
                 print("oiiiiiiiiii")
-                raise cherrypy.HTTPRedirect("/signUp")
+                raise cherrypy.HTTPRedirect("/my_events")
 
     @cherrypy.expose
     def signUp(self, username=None, password=None, email=None):
@@ -116,7 +116,8 @@ class WebApp(object):
             }
             return self.render('signUp.html', tparams)
 
-    def myEvents(self):
+    @cherrypy.expose()
+    def my_events(self):
         tparams = {
             'title': 'My Events',
             'errors': False,
@@ -125,15 +126,24 @@ class WebApp(object):
         }
         return self.render('my_events.html', tparams)
 
+    @cherrypy.expose()
+    def create_event(self, name=None, s_date=None, e_date=None, place=None, modality=None, max_participants=None):
+        tparams = {
+            'title': 'Create Event',
+            'errors': False,
+            'user': self.get_user(),
+        }
+        return self.render('create_event.html', tparams)
 
-def error_page(status, message, traceback, version):
-    tparams = {
-        'status': status,
-        'message': message,
-        'traceback': traceback,
-        'version': version
-    }
-    return app.render('error.html', tparams)
+    @cherrypy.expose()
+    def event_details(self):
+        tparams = {
+            'title': 'Event Details',
+            'errors': False,
+            'user': self.get_user(),
+            # 'information': event_info
+        }
+        return self.render('event_details.html', tparams)
 
 
 if __name__ == '__main__':
@@ -151,9 +161,6 @@ if __name__ == '__main__':
         },
     }
 
-    cherrypy.config.update({'error_page.400': error_page})
-    cherrypy.config.update({'error_page.404': error_page})
-    cherrypy.config.update({'error_page.500': error_page})
     cherrypy.config.update({'server.socket_host': '127.0.0.1'})
     cherrypy.config.update({'server.socket_port': 8080})
 

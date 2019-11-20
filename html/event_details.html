@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>CityRunning | {{title}}</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="../static/css/heroic-features.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" style="color: white">CityRunning</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="create_event">Create Event</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="my_events">My Events</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index">Log Out</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <!-- Jumbotron Header -->
+    <div class="jumbotron my-4" style="background-image: url('../static/images/jumbotron_image.jpg'); color: white">
+      <h1 class="display-3">{{title}}</h1>
+      <p class="lead">Nome do evento</p>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">About your event</h5>
+        </div>
+
+        <!-- Evento Information -->
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">At <a class="card-text">place</a></li>
+            <li class="list-group-item">From start date to finish date</li>
+            <li class="list-group-item">modality</li>
+            <li class="list-group-item">Max number of participants: 111111</li>
+        </ul>
+
+        <!---só aperece para gestores--->
+        <div class="card-footer">
+            <p class="card-text">
+                <form method="get" action="edit_event">
+                    <button type="submit" class="btn btn-sm btn-primary" href="edit_event">Edit Information</button>
+                </form>
+            </p>
+            <p class="card-text">
+                <form method="get" action="delete_event">
+                    <button type="submit" class="btn btn-sm " href="my_events">Delete Event</button>
+                </form>
+            </p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Participants<span class="badge">0 of 100</span></h5>
+            <p class="card-text">Add or view your event's participants.</p>
+        </div>
+
+        <div class="card-footer">
+            <!----só aparace se ainda não está inscrito---->
+            <p class="card-text">
+                <form method="get" action="add_registration">
+                    <button type="submit" class="btn btn-sm btn-primary">Add Registration</button>
+                </form>
+            </p>
+
+            <!---só aparece para o getor---->
+            <p class="card-text">
+                <form method="get" action="see_participants">
+                    <button type="submit" class="btn btn-sm ">See Participants</button>
+                </form>
+            </p>
+
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Results</h5>
+            <p class="card-text">Add and consult event's results.</p>
+        </div>
+
+        <!---só aparece para o getor---->
+        <div class="card-footer">
+            <p class="card-text">
+                <form method="get" action="add_results">
+                    <button type="submit" class="btn btn-sm btn-primary">Add Results</button>
+                </form>
+            </p>
+
+            <p class="card-text">
+                <form method="get" action="see_results">
+                    <button type="submit" class="btn btn-sm ">See Results</button>
+                </form>
+            </p>
+        </div>
+    </div>
+
+
+
+	<script src="static/scripts/jquery.validate.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="static/scripts/popper.min.js"></script>
+    <script src="static/scripts/bootstrap.min.js"></script>
+
+</body>
+</html>
