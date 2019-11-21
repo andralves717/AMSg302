@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>CityRunning | {{title}}</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <link href="../static/css/heroic-features.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" style="color: white">CityRunning</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="create_event">Create Event</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="my_events">My Events</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index">Log Out</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <!-- Jumbotron Header -->
+    <div class="jumbotron my-4" style="background-image: url('../static/images/jumbotron_image.jpg'); color: white">
+      <h1 class="display-3">{{title}}</h1>
+      <h1 class="display-3" style="color:blanchedalmond "> NAME OF EVENT</h1>
+        <a href="event_details" class="btn btn-primary btn-lg">Go back to event details >></a>
+    </div>
+
+       <div class="list-group">
+        <a class="list-group-item list-group-item-action flex-column align-items-start">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">admin</h5>
+            </div>
+            <p class="mb-1">20 meters</p>
+        </a>
+
+
+           <a class="list-group-item list-group-item-action flex-column align-items-start"> <!--ligação para o email do participante?--->
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">sam</h5>
+            </div>
+            <p class="mb-1">30 meters</p>
+        </a>
+
+       </div>
+  </div>
+
+
+      <script src="static/scripts/jquery.validate.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="static/scripts/popper.min.js"></script>
+    <script src="static/scripts/bootstrap.min.js"></script>
+
+
+</body>
+</html>

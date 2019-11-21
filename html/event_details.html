@@ -50,6 +50,7 @@
     <div class="jumbotron my-4" style="background-image: url('../static/images/jumbotron_image.jpg'); color: white">
       <h1 class="display-3">{{title}}</h1>
       <p class="lead">Nome do evento</p>
+        <a href="my_events" class="btn btn-primary btn-lg">Go back to events list >></a>
     </div>
 
     <div class="card">
@@ -90,14 +91,14 @@
             <!----só aparace se ainda não está inscrito---->
             <p class="card-text">
                 <form method="get" action="add_registration">
-                    <button type="submit" class="btn btn-sm btn-primary">Add Registration</button>
+                    <button type="submit" class="btn btn-sm btn-primary" href="add_registration">Add Registration</button>
                 </form>
             </p>
 
             <!---só aparece para o getor---->
             <p class="card-text">
-                <form method="get" action="see_participants">
-                    <button type="submit" class="btn btn-sm ">See Participants</button>
+                <form method="get" action="see_registrations">
+                    <button type="submit" class="btn btn-sm ">See Registrations</button>
                 </form>
             </p>
 

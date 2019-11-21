@@ -49,53 +49,33 @@
     <!-- Jumbotron Header -->
     <div class="jumbotron my-4" style="background-image: url('../static/images/jumbotron_image.jpg'); color: white">
       <h1 class="display-3">{{title}}</h1>
-      <p class="lead">Information about the event</p>
+      <h1 class="display-3" style="color:blanchedalmond "> NAME OF EVENT</h1>
+      <p class="lead">Information about the participant</p>
+        <a href="my_events" class="btn btn-primary btn-lg">Go back to event details >></a>
     </div>
 
-    <section id="eventForm">
-        <form action="create_event" method="post" name="main_form">
+       <section id="registration">
+        <form action="add_registration" method="get">
 
             <div class="form-group row">
                 <label  class="col-sm-2 col-form-label">Name</label>
-                <input class="form-control" id="id_e_name" maxlength="254" name="name" type="text" placeholder="e.g. Taça UA" required>
-            </div>
-            <div class="form-group row">
-                <label  class="col-sm-2 col-form-label">Start Date</label>
-                <input class="form-control" id="id_e_date_start" maxlength="254" name="s_date" type="date" required>
-            </div>
-            <div class="form-group row">
-                <label  class="col-sm-2 col-form-label">End Date</label>
-                <input class="form-control" id="id_e_date_end" maxlength="254" name="e_date" type="date" required>
-            </div>
-            <div class="form-group row">
-                <label  class="col-sm-2 col-form-label">Place</label>
-                <input class="form-control" id="id_e_place" name="place" type="text" placeholder="e.g. Universidade de Aveiro" required>
-            </div>
-            <div class="form-group row">
-                <label  class="col-sm-2 col-form-label">Modality</label>
-                <input class="form-control" id="modality" maxlength="254" name="modality" type="text" required>
-
-            </div>
-            <div class="form-group row">
-                <label class="col-sm col-form-label">Max number of participants</label>
-                <input class="form-control" id="max_participants" maxlength="254" name="max_participants" type="number" required>
-
+                <input class="form-control" id="p_name" maxlength="254" name="name" type="text" placeholder="e.g. Chico da Tina" required>
             </div>
 
-            <div class="form-group row">
+          <div class="form-group row">
+                <label  class="col-sm-2 col-form-label">Email</label>
+                <input class="form-control" id="p_email" maxlength="254" name="email" type="email" placeholder="e.g. email@email.com" required>
+            </div>
+
+          <div class="form-group row">
                 <div class="col-md-offset-2 col-md-10">
-                    <button type="submit" class="btn btn-default" href="my_events">Create event</button>
+                    <!---input type="hidden" value={{nameEvent}} name="nameEvent"  ---->
+                    <input type="submit" value="Add registration" class="btn btn-default"/>
                 </div>
             </div>
-        </form>
-    </section>
-
-
-
-
-
-
-
+        </div>
+    </form>
+</section>
 
 	<script src="static/scripts/jquery.validate.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

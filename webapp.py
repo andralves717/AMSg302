@@ -93,7 +93,6 @@ class WebApp(object):
                 }
                 return self.render('login.html', tparams)
             else:
-                print("oiiiiiiiiii")
                 raise cherrypy.HTTPRedirect("/my_events")
 
     @cherrypy.expose
@@ -122,6 +121,7 @@ class WebApp(object):
             'title': 'My Events',
             'errors': False,
             'user': self.get_user(),
+            'nameEvent': 'Evento1'
             # 'events': events_list
         }
         return self.render('my_events.html', tparams)
@@ -136,7 +136,7 @@ class WebApp(object):
         return self.render('create_event.html', tparams)
 
     @cherrypy.expose()
-    def event_details(self):
+    def event_details(self, nameEvent=None):
         tparams = {
             'title': 'Event Details',
             'errors': False,
@@ -145,11 +145,65 @@ class WebApp(object):
         }
         return self.render('event_details.html', tparams)
 
+    @cherrypy.expose()
+    def add_registration(self, name=None, email=None, nameEvent=None):
+        tparams = {
+            'title': 'Registration',
+            'errors': False,
+            'user': self.get_user(),
+            'nameEvent': nameEvent
+        }
+        return self.render('add_registration.html', tparams)
+
+    @cherrypy.expose()
+    def add_results(self, name=None, result=None, nameEvent=None):
+        tparams = {
+            'title': 'Add Results',
+            'errors': False,
+            'user': self.get_user(),
+            'e_name': nameEvent
+        }
+        return self.render('add_results.html', tparams)
+
+    @cherrypy.expose()
+    def edit_event(self, new_arg=None, arg2change=None, nameEvent=None):
+        tparams = {
+            'title': 'Edit Event',
+            'errors': False,
+            'user': self.get_user(),
+            #'nameEvent': nameEvent
+        }
+        return self.render('edit_event.html', tparams)
+
+    @cherrypy.expose()
+    def delete_event(self, nameEvent=None):
+        raise cherrypy.HTTPRedirect('/my_events')
+
+    @cherrypy.expose()
+    def see_registrations(self):
+        tparams = {
+            'title': 'Registrations',
+            'errors': False,
+            'user': self.get_user(),
+            # 'nameEvent': nameEvent
+        }
+        return self.render('see_registrations.html', tparams)
+
+    @cherrypy.expose()
+    def see_results(self):
+        tparams = {
+            'title': 'Results',
+            'errors': False,
+            'user': self.get_user(),
+            # 'nameEvent': nameEvent
+        }
+        return self.render('see_results.html', tparams)
+
+
+
 
 if __name__ == '__main__':
     baseDir = os.path.dirname(os.path.abspath(__file__))
-    cherrypy.log("CityRunning Project")
-    cherrypy.log("Dir is " + str(baseDir))
     conf = {
         '/': {
             'tools.sessions.on': True,
@@ -162,7 +216,7 @@ if __name__ == '__main__':
     }
 
     cherrypy.config.update({'server.socket_host': '127.0.0.1'})
-    cherrypy.config.update({'server.socket_port': 8080})
+    #cherrypy.config.update({'server.socket_port': 8080})
 
     app = WebApp()
     cherrypy.quickstart(app, '/', conf)
