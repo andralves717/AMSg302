@@ -49,10 +49,11 @@
     <!-- Jumbotron Header -->
     <div class="jumbotron my-4" style="background-image: url('../static/images/jumbotron_image.jpg'); color: white">
       <h1 class="display-3">{{title}}</h1>
-      <p class="lead">Nome do evento</p>
+      <p class="lead">{{information['nome']}}</p>
         <a href="my_events" class="btn btn-primary btn-lg">Go back to events list >></a>
     </div>
 
+      <div class="card-deck">
     <div class="card">
         <div class="card-body">
             <h5 class="card-title">About your event</h5>
@@ -60,47 +61,57 @@
 
         <!-- Evento Information -->
         <ul class="list-group list-group-flush">
-            <li class="list-group-item">At <a class="card-text">place</a></li>
-            <li class="list-group-item">From start date to finish date</li>
-            <li class="list-group-item">modality</li>
-            <li class="list-group-item">Max number of participants: 111111</li>
+            <li class="list-group-item">At <a class="card-text">{{information['place']}}</a></li>
+            <li class="list-group-item">From {{information['inicio']}} to {{information['fim']}}</li>
+            <li class="list-group-item">Modality: {{information['modality']}}</li>
+            <li class="list-group-item">Max number of participants: {{information['maxPart']}}</li>
         </ul>
 
         <!---só aperece para gestores--->
         <div class="card-footer">
-            <p class="card-text">
-                <form method="get" action="edit_event">
-                    <button type="submit" class="btn btn-sm btn-primary" href="edit_event">Edit Information</button>
-                </form>
-            </p>
-            <p class="card-text">
-                <form method="get" action="delete_event">
-                    <button type="submit" class="btn btn-sm " href="my_events">Delete Event</button>
-                </form>
-            </p>
+            {% if isGestor %}
+                <p class="card-text">
+                    <form method="get" action="edit_event">
+                        <input type="hidden" name="nameEvent" value="{{information['nome']}}">
+                        <button type="submit" class="btn btn-sm btn-primary">Edit Information</button>
+                    </form>
+                </p>
+                <p class="card-text">
+                    <form method="get" action="delete_event">
+                        <input type="hidden" name="nameEvent" value="{{information['nome']}}">
+                        <button type="submit" class="btn btn-sm ">Delete Event</button>
+                    </form>
+                </p>
+            {% endif %}
         </div>
     </div>
 
     <div class="card">
         <div class="card-body">
-            <h5 class="card-title">Participants<span class="badge">0 of 100</span></h5>
+            <h5 class="card-title">Participants<span class="badge">{{information['numRegistrations']}} of {{information['maxPart']}}</span></h5>
             <p class="card-text">Add or view your event's participants.</p>
         </div>
 
         <div class="card-footer">
             <!----só aparace se ainda não está inscrito---->
-            <p class="card-text">
-                <form method="get" action="add_registration">
-                    <button type="submit" class="btn btn-sm btn-primary" href="add_registration">Add Registration</button>
-                </form>
-            </p>
+            {% if not isInscrito %}
+                <p class="card-text">
+                    <form method="get" action="add_registration">
+                        <input type="hidden" name="nameEvent" value="{{information['nome']}}">
+                        <button type="submit" class="btn btn-sm btn-primary">Add Registration</button>
+                    </form>
+                </p>
+            {% endif %}
 
             <!---só aparece para o getor---->
-            <p class="card-text">
-                <form method="get" action="see_registrations">
-                    <button type="submit" class="btn btn-sm ">See Registrations</button>
-                </form>
-            </p>
+            {% if isGestor %}
+                <p class="card-text">
+                    <form method="get" action="see_registrations">
+                        <input type="hidden" name="nameEvent" value="{{information['nome']}}">
+                        <button type="submit" class="btn btn-sm ">See Registrations</button>
+                    </form>
+                </p>
+            {% endif %}
 
         </div>
     </div>
@@ -113,20 +124,24 @@
 
         <!---só aparece para o getor---->
         <div class="card-footer">
-            <p class="card-text">
-                <form method="get" action="add_results">
-                    <button type="submit" class="btn btn-sm btn-primary">Add Results</button>
-                </form>
-            </p>
+            {% if isGestor %}
+                <p class="card-text">
+                    <form method="get" action="add_results">
+                        <input type="hidden" name="nameEvent" value="{{information['nome']}}">
+                        <button type="submit" class="btn btn-sm btn-primary">Add Results</button>
+                    </form>
+                </p>
+            {% endif %}
 
             <p class="card-text">
                 <form method="get" action="see_results">
+                    <input type="hidden" name="nameEvent" value="{{information['nome']}}">
                     <button type="submit" class="btn btn-sm ">See Results</button>
                 </form>
             </p>
         </div>
     </div>
-
+</div>
 
 
 	<script src="static/scripts/jquery.validate.min.js"></script>

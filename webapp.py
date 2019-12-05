@@ -1,11 +1,11 @@
 import cherrypy
 import os
 import sqlite3
-import json
-import requests
 from sqlite3 import Error
 from jinja2 import Environment, PackageLoader, select_autoescape
+from datetime import date
 
+#event_details cherrypy.expose()
 
 class WebApp(object):
     database = 'baseDados.db'
@@ -64,6 +64,112 @@ class WebApp(object):
             return False
         return True
 
+    def create_eventDB(self, name=None, s_date=None, e_date=None, place=None, modality=None, max_participants=None):
+        username = self.get_user()['username']
+        command = "insert into eventos values ('{}','{}','{}','{}','{}','{}','{}','{}')".format(username, name, s_date,
+                                                                                                e_date, place,
+                                                                                                max_participants, "",
+                                                                                                modality)
+        db_con = self.db_connection(WebApp.database)
+        try:
+            cur = db_con.execute(command)
+            db_con.commit()
+            db_con.close()
+        except sqlite3.Error as e:
+            return False
+        return True
+
+    def get_events(self):
+        nome = self.get_user()['username']
+        command_event = "select * from eventos where gestor =('{}') ".format(nome)
+        db_con = self.db_connection(WebApp.database)
+        cur = db_con.execute(command_event)
+        tabela = cur.fetchall()
+
+        lista = []
+        for evento in tabela:
+            print("data",evento[2])
+            event = {'nome': evento[1], 'inicio': evento[2], 'fim': evento[3], 'place': evento[4],
+                     'modality': evento[7]}
+            lista.append(event)
+
+        command_event = "select * from eventos where registrations like '%{}%'".format(nome)
+        db_con = self.db_connection(WebApp.database)
+        cur = db_con.execute(command_event)
+        tabela = cur.fetchall()
+
+        for evento in tabela:
+            event = {'nome': evento[1], 'inicio': evento[2], 'fim': evento[3], 'place': evento[4],
+                     'modality': evento[7]}
+            if event not in lista:
+                lista.append(event)
+
+        db_con.close()
+        return lista
+
+    def get_event_details(self, nameEvent):
+        comand = "select * from eventos where nome = ('{}')".format(nameEvent)
+        db_con = self.db_connection(WebApp.database)
+        cur = db_con.execute(comand)
+        evento = cur.fetchone()
+        db_con.close()
+
+        registrations = self.get_registrations(nameEvent)
+
+        details = {'gestor': evento[0], 'nome': evento[1], 'inicio': evento[2], 'fim': evento[3], 'place': evento[4],
+                   'maxPart': evento[5], 'modality': evento[7], 'numRegistrations': len(registrations), 'registrations': registrations}
+
+        username = self.get_user()['username']
+        if username == details['gestor']: #ver se é gestor
+            return details, True
+        else:
+            return details, False
+
+    def get_registrations(self, nameEvent):
+        comand = "select registrations from eventos where nome = ('{}')".format(nameEvent)
+        db_con = self.db_connection(WebApp.database)
+        cur = db_con.execute(comand)
+        registrations = cur.fetchall()[0][0]
+        db_con.close()
+
+        lista = registrations.split(",")
+        if '' in lista:
+            lista.remove('')
+        return lista
+
+    def add_resultDb(self, event_name, participant, result):
+        db_con = self.db_connection(self.database)
+        command = "insert into resultados values ('{}','{}','{}','{}')".format(event_name, participant, result, date.today())
+        try:
+            db_con.execute(command)
+            db_con.commit()
+            db_con.close()
+        except sqlite3.Error as e:
+            return False
+        return True
+
+    def get_results(self, event_name):
+        db_con = self.db_connection(self.database)
+        command = "select * from resultados where evento_nome = ('{}')".format(event_name)
+        cur = db_con.execute(command)
+        tabela = cur.fetchall()
+        db_con.close()
+
+        results = [{'username': result[1], 'result': result[2], 'date': result[3]} for result in tabela]
+        return results
+
+    def edit_eventDB(self, arg_alter, new_arg, event_name):
+        username = self.get_user()['username']
+        db_con = self.db_connection(self.database)
+        command = "UPDATE eventos SET '{}'='{}' WHERE nome='{}' and gestor = '{}'".format(arg_alter, new_arg, event_name, username)
+        try:
+            db_con.execute(command)
+            db_con.commit()
+            db_con.close()
+            return False
+        except sqlite3.Error as e:
+            return True
+
     # templates
     @cherrypy.expose()
     def index(self):
@@ -72,7 +178,7 @@ class WebApp(object):
             'user': self.get_user(),
             'errors': False
         }
-        return self.render("index.html",tparams)
+        return self.render("index.html", tparams)
 
     @cherrypy.expose
     def login(self, username=None, password=None):
@@ -117,31 +223,61 @@ class WebApp(object):
 
     @cherrypy.expose()
     def my_events(self):
-        tparams = {
-            'title': 'My Events',
-            'errors': False,
-            'user': self.get_user(),
-            'nameEvent': 'Evento1'
-            # 'events': events_list
-        }
-        return self.render('my_events.html', tparams)
+        if not self.get_user()['authenticated']:
+            raise cherrypy.HTTPRedirect('/')
+        else:
+            events_list = self.get_events()
+            tparams = {
+                'title': 'My Events',
+                'errors': False,
+                'user': self.get_user(),
+                'nameEvent': 'Evento1',
+                'events': events_list
+            }
+            return self.render('my_events.html', tparams)
 
     @cherrypy.expose()
     def create_event(self, name=None, s_date=None, e_date=None, place=None, modality=None, max_participants=None):
-        tparams = {
-            'title': 'Create Event',
-            'errors': False,
-            'user': self.get_user(),
-        }
-        return self.render('create_event.html', tparams)
+        if name is None:
+            tparams = {
+                'title': 'Create Event',
+                'errors': False,
+                'user': self.get_user(),
+            }
+            return self.render('create_event.html', tparams)
+        done = self.create_eventDB(name, s_date, e_date, place, modality, max_participants)
+        if not done:
+            tparams = {
+                'title': 'Create Event',
+                'errors': True,
+                'user': self.get_user(),
+            }
+            return self.render('create_event.html', tparams)
+        else:
+            tparams = {
+                'title': 'Create Event',
+                'errors': False,
+                'user': self.get_user(),
+            }
+            raise cherrypy.HTTPRedirect('/my_events')
 
     @cherrypy.expose()
     def event_details(self, nameEvent=None):
+        event_info, isGestor = self.get_event_details(nameEvent)
+        user = self.get_user()
+        print (event_info['registrations'])
+        isInscrito = False
+        print (user['username'])
+        if user['username'] in event_info['registrations']:
+            isInscrito = True
+        print (isInscrito)
         tparams = {
             'title': 'Event Details',
             'errors': False,
-            'user': self.get_user(),
-            # 'information': event_info
+            'user': user,
+            'information': event_info,
+            'isGestor': isGestor,
+            'isInscrito': isInscrito
         }
         return self.render('event_details.html', tparams)
 
@@ -156,14 +292,23 @@ class WebApp(object):
         return self.render('add_registration.html', tparams)
 
     @cherrypy.expose()
-    def add_results(self, name=None, result=None, nameEvent=None):
+    def add_results(self, name=None, result=None, nameEvent=None, automatic=None):
         tparams = {
             'title': 'Add Results',
             'errors': False,
             'user': self.get_user(),
-            'e_name': nameEvent
+            'nameEvent': nameEvent
         }
-        return self.render('add_results.html', tparams)
+
+        if not nameEvent or not automatic:
+            return self.render('add_results.html', tparams)
+        else:
+            if automatic == True:
+                print('Buscar aos sensores'.center(50, '-'))
+            else:
+                self.add_resultDb(nameEvent, name, result)
+            #raise cherrypy.HTTPRedirect('/event_details?nameEvent='+nameEvent)
+            return self.render('add_results.html', tparams)
 
     @cherrypy.expose()
     def edit_event(self, new_arg=None, arg2change=None, nameEvent=None):
@@ -171,9 +316,27 @@ class WebApp(object):
             'title': 'Edit Event',
             'errors': False,
             'user': self.get_user(),
-            #'nameEvent': nameEvent
+            'nameEvent': nameEvent
         }
-        return self.render('edit_event.html', tparams)
+        if not new_arg or not arg2change:
+            return self.render('edit_event.html', tparams)
+        else:
+            print("newarg", new_arg)
+            error = self.edit_eventDB(arg2change, new_arg, nameEvent)
+            if error:
+                tparams = {
+                    'title': 'Edit Event',
+                    'errors': True,
+                    'user': self.get_user(),
+                    'nameEvent': nameEvent
+                }
+                return self.render('edit_event.html', tparams)
+            if arg2change == 'nome':
+                raise cherrypy.HTTPRedirect('/event_details?nameEvent=' + new_arg)
+            else:
+                raise cherrypy.HTTPRedirect('/event_details?nameEvent=' + nameEvent)
+
+
 
     @cherrypy.expose()
     def delete_event(self, nameEvent=None):
@@ -190,16 +353,17 @@ class WebApp(object):
         return self.render('see_registrations.html', tparams)
 
     @cherrypy.expose()
-    def see_results(self):
+    def see_results(self, nameEvent):
+        results = self.get_results(nameEvent)
+        print("results", results)
         tparams = {
             'title': 'Results',
             'errors': False,
             'user': self.get_user(),
-            # 'nameEvent': nameEvent
+            'nameEvent': nameEvent,
+            'results': results
         }
         return self.render('see_results.html', tparams)
-
-
 
 
 if __name__ == '__main__':
@@ -216,7 +380,7 @@ if __name__ == '__main__':
     }
 
     cherrypy.config.update({'server.socket_host': '127.0.0.1'})
-    #cherrypy.config.update({'server.socket_port': 8080})
+    # cherrypy.config.update({'server.socket_port': 8080})
 
     app = WebApp()
     cherrypy.quickstart(app, '/', conf)

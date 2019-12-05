@@ -49,8 +49,11 @@
     <!-- Jumbotron Header -->
     <div class="jumbotron my-4" style="background-image: url('../static/images/jumbotron_image.jpg'); color: white">
       <h1 class="display-3">{{title}}</h1>
-      <h1 class="display-3" style="color:blanchedalmond "> NAME OF EVENT</h1>
-        <a href="event_details" class="btn btn-primary btn-lg">Go back to event details >></a>
+      <h1 class="display-3" style="color:blanchedalmond "> {{nameEvent}}</h1>
+        <form method="get" action="event_details">
+            <input hidden value="{{nameEvent}}" name="nameEvent">
+            <button class="btn btn-primary btn-lg">Go back to event details >></button>
+        </form>
     </div>
 
     <div class="card-deck">
@@ -60,8 +63,8 @@
                   <h4 class="card-title">Name</h4>
                   <p class="card-text">
                   <div class="form-group">
-                      <!---input type="hidden" value="{{nameEvent}}" name="nameEvent"  --->
-                      <!----input type="hidden" value="e_name" name="arg2change" ----->
+                      <input type="hidden" value="{{nameEvent}}" name="nameEvent">
+                      <input type="hidden" value="nome" name="arg2change">
                       <input class="form-control" id="p_name" maxlength="254" name="new_arg" type="text" placeholder="e.g. Taça UA 2" required>
                     </div>
                   </p>
@@ -78,8 +81,8 @@
                   <h4 class="card-title">Start Date</h4>
                   <p class="card-text">
                   <div class="form-group">
-                      <!---input type="hidden" value="{{nameEvent}}" name="nameEvent"  --->
-                      <!----input type="hidden" value="e_name" name="arg2change" ----->
+                      <input type="hidden" value="{{nameEvent}}" name="nameEvent">
+                      <input type="hidden" value="s_data" name="arg2change">
                       <input class="form-control" id="s_date" maxlength="254" name="new_arg" type="date"required>
                   </div>
 
@@ -97,8 +100,8 @@
                   <h4 class="card-title">End Date</h4>
                   <p class="card-text">
                   <div class="form-group">
-                      <!---input type="hidden" value="{{nameEvent}}" name="nameEvent"  --->
-                      <!----input type="hidden" value="e_name" name="arg2change" ----->
+                      <input type="hidden" value="{{nameEvent}}" name="nameEvent">
+                      <input type="hidden" value="e_data" name="arg2change">
                       <input class="form-control" id="e_date" maxlength="254" name="new_arg" type="date" required>
                   </div>
                   </p>
@@ -118,8 +121,8 @@
                   <h4 class="card-title">Place</h4>
                   <p class="card-text">
                   <div class="form-group">
-                      <!---input type="hidden" value="{{nameEvent}}" name="nameEvent"  --->
-                      <!----input type="hidden" value="e_name" name="arg2change" ----->
+                      <input type="hidden" value="{{nameEvent}}" name="nameEvent">
+                      <input type="hidden" value="place" name="arg2change">
                       <input class="form-control" id="place" maxlength="254" name="new_arg" type="text " placeholder="e.g. Aveiro" required>
                   </div>
                   </p>
@@ -136,8 +139,8 @@
                   <h4 class="card-title">Modality</h4>
                   <p class="card-text">
                   <div class="form-group">
-                      <!---input type="hidden" value="{{nameEvent}}" name="nameEvent"  --->
-                      <!----input type="hidden" value="e_name" name="arg2change" ----->
+                      <input type="hidden" value="{{nameEvent}}" name="nameEvent">
+                      <input type="hidden" value="modality" name="arg2change">
                       <input class="form-control" id="modality" maxlength="254" name="new_arg" type="text " placeholder="e.g. Football" required>
                   </div>
                   </p>
@@ -154,8 +157,8 @@
                   <h4 class="card-title">Max Registrations</h4>
                   <p class="card-text">
                   <div class="form-group">
-                      <!---input type="hidden" value="{{nameEvent}}" name="nameEvent"  --->
-                      <!----input type="hidden" value="e_name" name="arg2change" ----->
+                      <input type="hidden" value="{{nameEvent}}" name="nameEvent">
+                      <input type="hidden" value="max_participantes" name="arg2change">
                       <input class="form-control" id="max_registrations" maxlength="254" name="new_arg" type="number" required>
                   </div>
                   </p>
@@ -166,7 +169,11 @@
           </form>
       </div>
     </div>
+      {% if errors %}
+      <p class="validation-summary-errors">An error has occurred</p>
+      {% endif %}
   </div>
+  <p></p>
 
 
       <script src="static/scripts/jquery.validate.min.js"></script>

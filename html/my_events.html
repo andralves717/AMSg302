@@ -54,35 +54,28 @@
     </div>
 
     <!-- Page Features -->
-    <div class="card-deck ">
+    <div class="card-deck">
+    {% for evento in events %}
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title" id="event{{evento['nome']}}" name="name_event" >{{evento['nome']}}</h5>
+                <p class="card-text">{{evento['modality']}} </p>
+                <p class="card-text"> {{evento['place']}}</p>
+            </div>
 
-    <div class="card">
-
-        <img class="card-img-top" src="" alt="">
-
-        <div class="card-body">
-          <h5 class="card-title" id="event1" name="e_name" >evento 1</h5>
-            <p class="card-text">
-                Modalidade
-            </p>
-            <p class="card-text">
-                Local onde vai decorrer
-            </p>
-        </div>
-
-        <div class="card-footer">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                    <form method="get" action="event_details">
-                       <!---input type="hidden" value="{{nameEvent}}" name="e_name" ---->
-                        <button type="submit" class="btn btn-sm btn-outline-secondary" href="event_details">Details</button>
-                    </form>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                        <form method="get" action="event_details">
+                           <input type="hidden" value="{{evento['nome']}}" name="nameEvent">
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">Details</button>
+                        </form>
+                    </div>
+                    <small class="text-muted">{{evento['inicio']}} - {{evento['fim']}}</small>
                 </div>
-                <small class="text-muted">data de inicio e fim
-                </small>
             </div>
         </div>
-    </div>
+        {% endfor %}
 
    <div class="card">
 

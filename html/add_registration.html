@@ -49,9 +49,12 @@
     <!-- Jumbotron Header -->
     <div class="jumbotron my-4" style="background-image: url('../static/images/jumbotron_image.jpg'); color: white">
       <h1 class="display-3">{{title}}</h1>
-      <h1 class="display-3" style="color:blanchedalmond "> NAME OF EVENT</h1>
+      <h1 class="display-3" style="color:blanchedalmond "> {{nameEvent}}</h1>
       <p class="lead">Information about the participant</p>
-        <a href="my_events" class="btn btn-primary btn-lg">Go back to event details >></a>
+        <form method="get" action="event_details">
+            <input hidden value="{{nameEvent}}" name="nameEvent">
+            <button class="btn btn-primary btn-lg">Go back to event details >></button>
+        </form>
     </div>
 
        <section id="registration">

@@ -49,8 +49,11 @@
     <!-- Jumbotron Header -->
     <div class="jumbotron my-4" style="background-image: url('../static/images/jumbotron_image.jpg'); color: white">
       <h1 class="display-3">{{title}}</h1>
-      <h1 class="display-3" style="color:blanchedalmond "> NAME OF EVENT</h1>
-        <a href="event_details" class="btn btn-primary btn-lg">Go back to event details >></a>
+      <h1 class="display-3" style="color:blanchedalmond "> {{nameEvent}}</h1>
+        <form method="get" action="event_details">
+            <input type="hidden" value="{{nameEvent}}" name="nameEvent">
+            <button class="btn btn-primary btn-lg">Go back to event details >></button>
+        </form>
     </div>
 
           <div class="card">
@@ -71,9 +74,15 @@
                   </div>
                   <div class="card-footer">
                     <div class="form-check form-check-inline">
-                        <!---input type="hidden" value={{nameEvent}} name="nameEvent" ---->
+                        <input type="hidden" value={{nameEvent}} name="nameEvent">
+                        <input type="hidden"  value="False" name="automatic">
                         <button type="submit" class="btn btn-sm">Add result</button>
                     </div>
+                      {% if errors %}
+                    <div class="alert alert-primary" role="alert">
+                        Error. Try again.
+                    </div>
+                    {% endif %}
                 </div>
               </form>
           </div>
@@ -88,6 +97,8 @@
               <div class="card-footer">
                 <div class="form-check form-check-inline">
                     <form method="get" action="add_results">
+                        <input type="hidden" value={{nameEvent}} name="nameEvent">
+                        <input hidden value="True" name="automatic">
                         <button type="submit" class="btn btn-sm">Fetch result</button>
                     </form>
                 </div>
