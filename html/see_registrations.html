@@ -55,22 +55,15 @@
             <button class="btn btn-primary btn-lg">Go back to event details >></button>
         </form>
     </div>
-
+        {% for participant in participants %}
        <div class="list-group">
         <a class="list-group-item list-group-item-action flex-column align-items-start">
             <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">admin</h5>
+                <h5 class="mb-1">{{participant[0]}}</h5>
             </div>
-            <p class="mb-1">admin@admin</p>
+            <p class="mb-1">{{participant[1]}}</p>
         </a>
-
-
-           <a class="list-group-item list-group-item-action flex-column align-items-start"> <!--ligação para o email do participante?--->
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">sam</h5>
-            </div>
-            <p class="mb-1">sam@sam</p>
-        </a>
+         {% endfor %}
 
        </div>
   </div>

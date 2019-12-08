@@ -49,36 +49,36 @@
     <!-- Jumbotron Header -->
     <div class="jumbotron my-4" style="background-image: url('../static/images/jumbotron_image.jpg'); color: white">
       <h1 class="display-3">{{title}}</h1>
-      <h1 class="display-3" style="color:blanchedalmond "> {{nameEvent}}</h1>
-      <p class="lead">Information about the participant</p>
-        <form method="get" action="event_details">
-            <input hidden value="{{nameEvent}}" name="nameEvent">
-            <button class="btn btn-primary btn-lg">Go back to event details >></button>
-        </form>
+      <p class="lead">Search for {{search}}</p>
+      <a href="my_events" class="btn btn-primary btn-lg">Go back to events list >></a>
     </div>
 
-       <section id="registration">
-        <form action="add_registration" method="get">
-
-            <div class="form-group row">
-                <label  class="col-sm-2 col-form-label">Name</label>
-                <input class="form-control" id="p_name" maxlength="254" name="name" type="text" placeholder="e.g. Chico da Tina" required>
+    <!-- Page Features -->
+    <div class="card-deck">
+    {% for evento in events %}
+        <div class="card">
+            <div class="card-body">
+              <h5 class="card-title" id="event{{evento['nome']}}" name="name_event" >{{evento['nome']}}</h5>
+                <p class="card-text">{{evento['modality']}} </p>
+                <p class="card-text"> {{evento['place']}}</p>
             </div>
 
-          <div class="form-group row">
-                <label  class="col-sm-2 col-form-label">Email</label>
-                <input class="form-control" id="p_email" maxlength="254" name="email" type="email" placeholder="e.g. email@email.com" required>
-            </div>
-
-          <div class="form-group row">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="hidden" value={{nameEvent}} name="nameEvent">
-                    <input type="submit" value="Add registration" class="btn btn-default"/>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                        <form method="get" action="event_details">
+                           <input type="hidden" value="{{evento['nome']}}" name="nameEvent">
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">Details</button>
+                        </form>
+                    </div>
+                    <small class="text-muted">{{evento['inicio']}} - {{evento['fim']}}</small>
                 </div>
             </div>
         </div>
-    </form>
-</section>
+        {% endfor %}
+
+</div>
+
 
 	<script src="static/scripts/jquery.validate.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -86,4 +86,3 @@
     <script src="static/scripts/bootstrap.min.js"></script>
 
 </body>
-</html>

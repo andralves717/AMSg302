@@ -48,7 +48,13 @@
 
     <!-- Jumbotron Header -->
     <div class="jumbotron my-4" style="background-image: url('../static/images/jumbotron_image.jpg'); color: white">
-      <h1 class="display-3">{{title}}</h1>
+        <div class="d-flex w-100 justify-content-between">
+            <h1 class="display-3">{{title}}</h1>
+            <form class="form-inline " method = "GET" action = "search" >
+        <input class="form-control mr-sm-2" name="query"  type="text" placeholder="name,place or modality">
+        <button class="btn" type="submit">Search</button>
+    </form>
+        </div>
       <p class="lead">Welcome Back, {{user['username']}}</p>
       <a href="create_event" class="btn btn-primary btn-lg">Create a new event >></a>
     </div>
