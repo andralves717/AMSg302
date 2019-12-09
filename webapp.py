@@ -310,7 +310,8 @@ class WebApp(object):
         event_info, isGestor = self.get_event_details(nameEvent)
         user = self.get_user()
         isInscrito = False
-        if user['username'] in event_info['registrations']:
+        usernames = [d[0] for d in event_info['registrations']]
+        if user['username'] in usernames:
             isInscrito = True
         tparams = {
             'title': 'Event Details',
