@@ -6,11 +6,15 @@
   link: /contact/
   new_window: false
   highlight: false
-- name: App
+- name: Protótipo
   link: https://share.proto.io/UW8WZB/
   new_window: true
   highlight: false
+- name: WebApp
+  link: http://city-running-project.herokuapp.com/
+  new_window: true
+  highlight: true
 - name: Documentação
   link: /doc/
-  new_window: false
+  new_window: true
   highlight: false
