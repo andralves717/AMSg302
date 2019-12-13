@@ -127,13 +127,17 @@ class WebApp(object):
             return details, False
 
     def get_registrations(self, nameEvent, string=False):
-        comand = "select registrations from eventos where nome = ('{}')".format(nameEvent)
+        comand = "select * from eventos where nome = ('{}')".format(nameEvent)
         db_con = self.db_connection(WebApp.database)
         cur = db_con.execute(comand)
-        registrations = cur.fetchall()[0][0]
+        reg = cur.fetchall()[0]
         db_con.close()
+        registrations = reg[-2]
         if string:
-            return registrations
+            if registrations ==[]:
+                return ""
+            else:
+                return registrations
         lista = registrations.split(";")
         if '' in lista:
             lista.remove('')
@@ -192,7 +196,7 @@ class WebApp(object):
         db_con = self.db_connection(self.database)
         registrations = self.get_registrations(event_name, True)
         registrations += "(" + name + "," + email + ")" + ";"
-        command = "update eventos set registrations='{}' where nome = '{}'".format(registrations,event_name)
+        command = "update eventos set registrations='{}' where nome = '{}'".format(registrations, event_name)
         try:
             db_con.execute(command)
             db_con.commit()
@@ -353,7 +357,7 @@ class WebApp(object):
         if not nameEvent or not automatic:
             return self.render('add_results.html', tparams)
         else:
-            if automatic == True:
+            if automatic == "True":
                 print('Buscar aos sensores'.center(50, '-'))
             else:
                 self.add_resultDb(nameEvent, name, result)
@@ -425,6 +429,16 @@ class WebApp(object):
         }
         return self.render('search.html',tparams)
 
+    # Error page
+def error_page(status, message, traceback, version):
+    tparams = {
+        'status'    : status,
+        'message'   : message,
+        'traceback' : traceback,
+        'version'   : version
+    }
+    return app.render('error.html', tparams)
+
 
 if __name__ == '__main__':
     baseDir = os.path.dirname(os.path.abspath(__file__))
@@ -438,6 +452,11 @@ if __name__ == '__main__':
             'tools.staticdir.dir': './static'
         },
     }
+
+    
+    cherrypy.config.update({'error_page.400': error_page})
+    cherrypy.config.update({'error_page.404': error_page})      
+    cherrypy.config.update({'error_page.500': error_page})  
 
     cherrypy.config.update({'server.socket_host': '127.0.0.1'})
     # cherrypy.config.update({'server.socket_port': 8080})

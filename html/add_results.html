@@ -74,7 +74,7 @@
                   </div>
                   <div class="card-footer">
                     <div class="form-check form-check-inline">
-                        <input type="hidden" value={{nameEvent}} name="nameEvent">
+                        <input type="hidden" value="{{nameEvent}}" name="nameEvent">
                         <input type="hidden"  value="False" name="automatic">
                         <button type="submit" class="btn btn-sm">Add result</button>
                     </div>
@@ -97,8 +97,8 @@
               <div class="card-footer">
                 <div class="form-check form-check-inline">
                     <form method="get" action="add_results">
-                        <input type="hidden" value={{nameEvent}} name="nameEvent">
-                        <input hidden value="True" name="automatic">
+                        <input type="hidden" value="{{nameEvent}}" name="nameEvent">
+                        <input type="hidden" value="True" name="automatic">
                         <button type="submit" class="btn btn-sm">Fetch result</button>
                     </form>
                 </div>
